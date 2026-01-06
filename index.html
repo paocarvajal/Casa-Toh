@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Toh - Administración</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A6D6A;
+            --primary-dark: #3a5654;
+            --accent: #333333;
+            --bg-body: #EBEBEB;
+            --bg-card: #FFFFFF;
+            --text-main: #333333;
+            --text-light: #666666;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Layout */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        h1 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f1f1f1;
+            padding-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Section: Overview (Top) */
+        .month-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 0.5rem;
+            border-radius: 50px;
+            width: fit-content;
+            margin: 0 auto 2rem auto;
+            box-shadow: var(--shadow);
+        }
+
+        .month-nav button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50%;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .month-nav button:hover {
+            background: #f0fdfa;
+        }
+
+        .month-nav span {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 150px;
+            text-align: center;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .summary-item {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--border-color, #ccc);
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Section: Partners */
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .partner-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .partner-card.is-me {
+            border-color: var(--primary);
+            background: #f0fdfa;
+        }
+
+        .partner-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .partner-detail {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .partner-status {
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed #ddd;
+            font-weight: 700;
+            text-align: right;
+            font-size: 1.1rem;
+        }
+
+        .status-pay {
+            color: var(--danger);
+        }
+
+        .status-receive {
+            color: var(--success);
+        }
+
+        .status-ok {
+            color: var(--primary);
+        }
+
+        /* Section: Transactions */
+        .controls-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .txn-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #f1f1f1;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .txn-item:hover {
+            background: #fafafa;
+        }
+
+        .txn-date {
+            font-family: monospace;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            line-height: 1.2;
+            background: #f3f4f6;
+            padding: 4px 8px;
+            border-radius: 6px;
+            min-width: 60px;
+        }
+
+        .txn-date span:first-child {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .txn-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .txn-desc {
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        .txn-meta {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .txn-amount {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: right;
+        }
+
+        .txn-actions {
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .txn-item:hover .txn-actions {
+            opacity: 1;
+        }
+
+        .amt-pos {
+            color: var(--success);
+        }
+
+        .amt-neg {
+            color: var(--danger);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(74, 109, 106, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+
+        .btn-icon:hover {
+            color: var(--primary);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            width: 95%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 109, 106, 0.1);
+        }
+
+        /* Utilities */
+        .tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="background: rgba(255,255,255,0.2); padding: 8px; border-radius: 8px;">
+                <!-- Simple Home Icon -->
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </div>
+            <div>
+                <h1>Casa Toh</h1>
+                <div style="font-size: 0.85rem; opacity: 0.9;">Administración & Finanzas</div>
+            </div>
+        </div>
+        <div class="user-info">
+            <button class="btn-primary" onclick="exportData()"
+                style="background:#3b82f6; font-size:0.9rem; padding: 0.5rem 1rem; margin-right:0.5rem;">💾 Copiar
+                Datos</button>
+            <button class="btn-primary" onclick="openGlobalReport()"
+                style="background:#0f766e; font-size:0.9rem; padding: 0.5rem 1rem;">📊 Ver Acumulado</button>
+            <div class="user-avatar">PCS</div>
+            <div>
+                <div style="font-weight: 600;">Paola</div>
+                <div style="font-size: 0.8rem; opacity: 0.8;">Admin</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="month-nav">
+        <button onclick="changeMonth(-1)">&#8592;</button>
+        <span id="currentMonthDisplay">Diciembre 2025</span>
+        <button onclick="changeMonth(1)">&#8594;</button>
+    </div>
+
+    <main>
+
+        <!-- 1. Resumen Mensual (TOP) -->
+        <section>
+            <h2 style="margin-bottom: 1rem; color: var(--primary);">Resumen Mensual</h2>
+            <div class="summary-cards">
+                <div class="summary-item" style="--border-color: var(--success);">
+                    <div class="summary-label">Ingresos Totales</div>
+                    <div class="summary-value" id="totalIncome" style="color: var(--success);">$0.00</div>
+                </div>
+                <div class="summary-item" style="--border-color: var(--danger);">
+                    <div class="summary-label">Gastos Totales</div>
+                    <div class="summary-value" id="totalExpense" style="color: var(--danger);">$0.00</div>
+                </div>
+                <div class="summary-item" style="--border-color: var(--accent);">
+                    <div class="summary-label">Balance Neto</div>
+                    <div class="summary-value" id="netBalance">$0.00</div>
+                </div>
+                <div class="summary-item" style="--border-color: var(--warning);">
+                    <div class="summary-label">Cuota Base (Compartida)</div>
+                    <div class="summary-value" id="sharePerPartner" style="font-size: 1.5rem; color: var(--text-main);">
+                        $0.00</div>
+                    <div style="font-size: 0.75rem; color: var(--text-light); margin-top: 5px;">(Por socio)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Estado de Socios (MIDDLE) -->
+        <section class="card">
+            <div class="card-header" style="margin-bottom: 1rem;">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    Estado de Cuentas Socios
+                </div>
+                <div style="font-size: 0.85rem; color: var(--text-light);">Basado en gastos pagados vs. cuota</div>
+            </div>
+
+            <div class="partners-grid" id="partnersGrid">
+                <!-- Populated via JS -->
+            </div>
+
+            <!-- Dynamic Math Note -->
+            <div
+                style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-light); background: #f8fafc; padding: 1rem; border-radius: 8px;">
+                <!-- JS Populated -->
+            </div>
+
+            <!-- New: Cash Flow Analysis for Pending Bills -->
+            <div id="liquidityAnalysis"
+                style="display:none; margin-top: 1.5rem; border-top: 2px dashed #e2e8f0; padding-top: 1.5rem;">
+                <h4 style="color:var(--warning); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem;">
+                    ⏳ Plan para pagar Facturas Pendientes
+                </h4>
+                <div
+                    style="background:#fffbeb; border:1px solid #fcd34d; border-radius:8px; padding:1rem; font-size:0.9rem; color:#78350f;">
+                    <div style="display:grid; grid-template-columns: 1fr auto; gap:0.5rem; margin-bottom:0.5rem;">
+                        <span>💰 Ingresos Totales en Cuenta:</span>
+                        <span id="liqIncome" style="font-weight:600;">$0.00</span>
+                    </div>
+                    <div
+                        style="display:grid; grid-template-columns: 1fr auto; gap:0.5rem; margin-bottom:0.5rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(0,0,0,0.1);">
+                        <span>💸 Menos Gastos ya Pagados (por ti):</span>
+                        <span id="liqPaid" style="font-weight:600; color:#dc2626;">-$0.00</span>
+                    </div>
+                    <div style="display:grid; grid-template-columns: 1fr auto; gap:0.5rem; margin-bottom:1rem;">
+                        <span style="font-weight:600;">💵 Realmente Disponible en Caja:</span>
+                        <span id="liqAvailable" style="font-weight:700;">$0.00</span>
+                    </div>
+
+                    <div
+                        style="background:white; padding:0.8rem; border-radius:6px; border:1px solid #fcd34d; margin-bottom:1rem;">
+                        <div style="display:grid; grid-template-columns: 1fr auto; gap:0.5rem; margin-bottom:0.5rem;">
+                            <span style="color:#d97706; font-weight:600;">🧾 Facturas Pendientes (Fusion, etc.):</span>
+                            <span id="liqPending" style="font-weight:700; color:#d97706;">$0.00</span>
+                        </div>
+                        <div id="liqGapMessage" style="text-align:center; font-weight:500; margin-top:0.5rem;">
+                            <!-- JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Movimientos del Mes (BOTTOM 1) -->
+        <section class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span id="monthlyMovsTitle">Movimientos del Mes</span>
+                </div>
+                <button class="btn btn-primary" onclick="openModal()">
+                    <span>+ Nuevo Movimiento</span>
+                </button>
+            </div>
+
+            <div class="controls-row">
+                <input type="text" id="searchInput" placeholder="Buscar en este mes..." class="search-box"
+                    onkeyup="renderTransactions()">
+            </div>
+
+            <div class="transaction-list" id="transactionList">
+                <!-- JS -->
+            </div>
+            <div id="emptyState" style="text-align: center; padding: 3rem; color: var(--text-light); display: none;">
+                No hay movimientos para este mes.
+            </div>
+        </section>
+
+        <!-- 4. Movimientos Consolidados (BOTTOM 2) -->
+        <section class="card" style="border-top: 4px solid var(--accent);">
+            <div class="card-header">
+                <div class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Movimientos Consolidados (Histórico)
+                </div>
+            </div>
+
+            <div class="controls-row" style="background: #f8fafc; padding: 1rem; border-radius: 8px;">
+                <select id="consFilterYear" class="form-select" onchange="renderConsolidated()">
+                    <option value="all">Todos los Años</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+                <select id="consFilterMonth" class="form-select" onchange="renderConsolidated()">
+                    <option value="all">Todos los Meses</option>
+                    <option value="0">Enero</option>
+                    <option value="1">Febrero</option>
+                    <option value="2">Marzo</option>
+                    <option value="3">Abril</option>
+                    <option value="4">Mayo</option>
+                    <option value="5">Junio</option>
+                    <option value="6">Julio</option>
+                    <option value="7">Agosto</option>
+                    <option value="8">Septiembre</option>
+                    <option value="9">Octubre</option>
+                    <option value="10">Noviembre</option>
+                    <option value="11">Diciembre</option>
+                </select>
+                <select id="consFilterPartner" class="form-select" onchange="renderConsolidated()">
+                    <option value="all">Todos los Socios</option>
+                    <!-- Populated JS -->
+                </select>
+                <select id="consFilterType" class="form-select" onchange="renderConsolidated()">
+                    <option value="all">Todos los Tipos</option>
+                    <option value="income">Ingresos</option>
+                    <option value="expense">Gastos</option>
+                </select>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                    <thead>
+                        <tr style="background: #f1f5f9; text-align: left; font-size: 0.9rem; color: var(--text-light);">
+                            <th style="padding: 1rem;">Fecha</th>
+                            <th style="padding: 1rem;">Concepto</th>
+                            <th style="padding: 1rem;">Categoría</th>
+                            <th style="padding: 1rem;">Asignado a</th>
+                            <th style="padding: 1rem; text-align: right;">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody id="consolidatedBody">
+                        <!-- JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Modal -->
+    <div id="transactionModal" class="modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; color: var(--primary);" id="modalTitle">Nuevo Movimiento</h3>
+                <button onclick="closeModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+
+            <form id="transactionForm" onsubmit="handleTransactionSubmit(event)">
+                <input type="hidden" id="editId">
+
+                <div class="form-group">
+                    <label class="form-label">Tipo de Movimiento</label>
+                    <div style="display: flex; gap: 1rem; background: #f8fafc; padding: 0.5rem; border-radius: 8px;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="type" value="income" onchange="updateFormType()"> Ingreso
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="type" value="expense" checked onchange="updateFormType()"> Gasto
+                        </label>
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="radio" name="type" value="payment" onchange="updateFormType()"> Abono / Pago
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" id="date" class="form-input" required>
+                </div>
+
+                <!-- Payer Section -->
+                <div class="form-group" id="payerGroup">
+                    <label class="form-label" id="payerLabel">Pagado Por (Socio):</label>
+                    <select id="payer" class="form-select">
+                        <!-- Populated JS -->
+                    </select>
+                </div>
+
+                <!-- Assign To Section -->
+                <div class="form-group" id="assignGroup"
+                    style="background:#f0fdfa; padding:1rem; border-radius:8px; border:1px solid #ccfbf1;">
+                    <label class="form-label" style="color:#0f766e;">Repercutir / Cargar a:</label>
+                    <select id="assignedTo" class="form-select">
+                        <option value="all">🏠 Toda la Casa (Dividir entre 4)</option>
+                        <!-- Populated JS -->
+                    </select>
+                    <div style="font-size:0.8rem; color:#0f766e; margin-top:5px;">
+                        Si seleccionas un socio, el monto completo se cargará a su cuenta personal.
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Concepto</label>
+                    <input type="text" id="description" class="form-input" placeholder="Ej. Pago CFE, Renta..."
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Monto (MXN)</label>
+                    <input type="number" id="amount" class="form-input" step="0.01" min="0" required placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Categoría</label>
+                    <select id="category" class="form-select">
+                        <!-- JS -->
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" onclick="closeModal()" class="btn"
+                        style="flex: 1; justify-content: center; background: #f1f5f9;">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"
+                        style="flex: 1; justify-content: center;">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Global Report Modal -->
+    <div id="globalReportModal" class="modal-overlay"
+        onclick="if(event.target === this) document.getElementById('globalReportModal').classList.remove('active')">
+        <div class="modal" style="max-width: 800px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+                <h3 style="font-size: 1.5rem; color: var(--primary);">Reporte Acumulado</h3>
+                <button onclick="document.getElementById('globalReportModal').classList.remove('active')"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="globalReportBody">
+                <!-- JS Populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const PARTNERS = ['BSA', 'OMCS', 'MGV', 'PCS'];
+        // PCS is the user.
+
+        // --- Data ---
+        const INITIAL_DATA = [{ "id": "nov1", "date": "2025-11-03", "description": "BOOKING COM B V", "category": "Renta Booking", "amount": 3678.13, "type": "income", "addedByUser": true }, { "id": "nov2", "date": "2025-11-12", "description": "APIC 555013344 Payoneer", "category": "Renta Airbnb", "amount": 6528, "type": "income", "addedByUser": true }, { "id": "nov3", "date": "2025-11-24", "description": "Hipoteca Casa", "category": "Hipoteca", "amount": 11027, "type": "expense", "payer": "PCS" }, { "id": "nov4", "date": "2025-11-15", "description": "Fusion Home Nov", "amount": 4074, "category": "Administración", "type": "expense", "payer": "pending", "addedByUser": true }, { "id": "dec1", "date": "2025-12-24", "description": "Hipoteca Casa", "amount": 11027, "category": "Hipoteca", "type": "expense", "payer": "PCS", "assignedTo": "all", "addedByUser": true }, { "id": "dec2", "date": "2025-12-01", "description": "Internet Telmex", "category": "Servicios", "amount": 345, "type": "expense", "payer": "PCS" }, { "id": "dec3", "date": "2025-12-05", "description": "Sana (Basura)", "category": "Servicios", "amount": 25, "type": "expense", "payer": "PCS" }, { "id": "dec4", "date": "2025-12-20", "description": "9302564569302564 / Dlocal MX", "category": "Renta Airbnb", "amount": 115.2, "type": "income", "addedByUser": true }, { "id": "dec5", "date": "2025-12-31", "description": "2728035572728035 / Dlocal MX", "category": "Renta Airbnb", "amount": 3679.03, "type": "income", "addedByUser": true }, { "id": "jan1", "date": "2026-01-24", "description": "Hipoteca (Proyección)", "category": "Hipoteca", "amount": 11027, "type": "expense", "payer": "PCS" }, { "id": "jan2", "date": "2026-01-05", "description": "Internet Telmex", "amount": 345, "category": "Servicios", "type": "expense", "payer": "PCS", "addedByUser": true }, { "id": "jan3", "date": "2026-01-05", "description": "Predial 2026", "amount": 600, "category": "Impuestos", "type": "expense", "payer": "PCS", "addedByUser": true }, { "id": "1767654720887", "date": "2026-01-05", "description": "Japay Julio 2025 a Marzo 2026", "amount": 546, "category": "Servicios", "type": "expense", "payer": "PCS", "addedByUser": true }, { "id": "1767654763620", "date": "2026-01-05", "description": "SANA  Oct Nov y Dic 2026", "amount": 75, "category": "Servicios", "type": "expense", "payer": "PCS", "addedByUser": true }, { "id": "1767654897872", "date": "2025-11-29", "description": "Reclamo Airbnb", "amount": 2282, "category": "Otros", "type": "income", "payer": null, "addedByUser": true }, { "id": "1767654984509", "date": "2025-11-08", "description": "Telmex Internet", "amount": 345, "category": "Servicios", "type": "expense", "payer": "PCS", "addedByUser": true }, { "id": "1767655184263", "date": "2025-11-11", "description": "Mobiliario Deco  Nov 2025 OMCS", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "OMCS", "addedByUser": true }, { "id": "1767655215930", "date": "2025-11-11", "description": "Mobiliario Deco  Nov 2025 MGV", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "MGV", "addedByUser": true }, { "id": "1767655310780", "date": "2025-12-11", "description": "Mobiliario Deco Dic 2025 OMCS", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "OMCS", "addedByUser": true }, { "id": "1767655333628", "date": "2025-12-11", "description": "Mobiliario Deco Dic 2025 MGV", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "MGV", "addedByUser": true }, { "id": "1767655356469", "date": "2025-12-11", "description": "Mobiliario Deco Dic 2025 BSA", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "BSA", "addedByUser": true }, { "id": "1767655389152", "date": "2026-01-11", "description": "Mobiliario Deco Enero 2026 OMCS", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "OMCS", "addedByUser": true }, { "id": "1767659763700", "date": "2026-01-11", "description": "Mobiliario Deco Enero 2026 MGV", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "MGV", "addedByUser": true }, { "id": "1767659784527", "date": "2026-01-11", "description": "Mobiliario Deco Enero 2026 BSA", "amount": 268.12, "category": "Otros", "type": "expense", "payer": "PCS", "assignedTo": "BSA", "addedByUser": true }];
+
+        let transactions = JSON.parse(localStorage.getItem('casaToh_v2_transactions')) || INITIAL_DATA;
+        let currentDate = new Date(2025, 11, 1); // December 2025
+
+        // --- References ---
+        const els = {
+            totalIncome: document.getElementById('totalIncome'),
+            totalExpense: document.getElementById('totalExpense'),
+            netBalance: document.getElementById('netBalance'),
+            sharePerPartner: document.getElementById('sharePerPartner'),
+            partnersGrid: document.getElementById('partnersGrid'),
+            transactionList: document.getElementById('transactionList'),
+            currentMonthDisplay: document.getElementById('currentMonthDisplay'),
+            monthlyMovsTitle: document.getElementById('monthlyMovsTitle'),
+            modal: document.getElementById('transactionModal'),
+            form: document.getElementById('transactionForm'),
+            category: document.getElementById('category'),
+            payer: document.getElementById('payer'),
+            assignedTo: document.getElementById('assignedTo'),
+            payerGroup: document.getElementById('payerGroup'),
+            assignGroup: document.getElementById('assignGroup'),
+            // Consolidate
+            consolidatedBody: document.getElementById('consolidatedBody'),
+            consFilterYear: document.getElementById('consFilterYear'),
+            consFilterMonth: document.getElementById('consFilterMonth'),
+            consFilterPartner: document.getElementById('consFilterPartner'),
+            consFilterType: document.getElementById('consFilterType'),
+        };
+
+        const Categories = {
+            expense: ['Hipoteca', 'Servicios', 'Administración', 'Mantenimiento', 'Impuestos', 'Otros'],
+            income: ['Renta Airbnb', 'Renta Booking', 'Renta Directa', 'Aportación Socios', 'Otros']
+        };
+
+        const MonthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+        // --- Core Logic ---
+        function init() {
+            populatePartnersSelect();
+            updateFormType();
+            render();
+            renderConsolidated();
+        }
+
+        function populatePartnersSelect() {
+            const options = PARTNERS.map(p => `<option value="${p}">${p}</option>`).join('');
+
+            // Payer Select - Add Pending Option
+            els.payer.innerHTML = options + `<option value="pending">⏳ Pendiente de Pago</option>`;
+            els.payer.value = 'PCS';
+
+            // Assign To Select (Append to 'all')
+            // Using logic inside handle to keep 'all' 
+            const existing = els.assignedTo.innerHTML;
+            // Only append if strict check or re-render
+            if (els.assignedTo.options.length <= 1) {
+                els.assignedTo.innerHTML += options;
+            }
+
+            // Consolidated Filter
+            els.consFilterPartner.innerHTML = `<option value="all">Todos los Socios</option>` + options;
+        }
+
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);
+        }
+
+        function getMonthData() {
+            return transactions.filter(t => {
+                const tDate = new Date(t.date + 'T00:00:00');
+                return tDate.getMonth() === currentDate.getMonth() && tDate.getFullYear() === currentDate.getFullYear();
+            });
+        }
+
+        // Helper to separate calculation from DOM updating
+        function calculateMonthStats(monthData) {
+            const income = monthData.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+
+            let sharedExpense = 0;
+            const individualExpense = { 'BSA': 0, 'OMCS': 0, 'MGV': 0, 'PCS': 0 };
+
+            monthData.filter(t => t.type === 'expense').forEach(t => {
+                const assigned = t.assignedTo || 'all';
+                if (assigned === 'all') {
+                    sharedExpense += t.amount;
+                } else if (individualExpense[assigned] !== undefined) {
+                    individualExpense[assigned] += t.amount;
+                }
+            });
+
+            const netShared = income - sharedExpense;
+            const sharedDeficit = netShared < 0 ? Math.abs(netShared) : 0;
+            const baseSharePerPartner = sharedDeficit > 0 ? (sharedDeficit / 4) : 0;
+
+            // PCS Paid (Expenses paid by PCS)
+            const pcsPaid = monthData.filter(t => t.type === 'expense' && (t.payer === 'PCS' || (!t.payer && t.payer !== 'pending'))).reduce((sum, t) => sum + t.amount, 0);
+
+            // Payments Made (Debt Repayment to PCS)
+            const paymentsMade = { 'BSA': 0, 'OMCS': 0, 'MGV': 0, 'PCS': 0 };
+            monthData.filter(t => t.type === 'payment').forEach(t => {
+                if (t.payer && paymentsMade[t.payer] !== undefined) {
+                    paymentsMade[t.payer] += t.amount;
+                }
+            });
+
+            // Construct Partner Balances
+            const partnerBalances = {};
+            PARTNERS.forEach(p => {
+                const totalDebt = baseSharePerPartner + (individualExpense[p] || 0);
+
+                if (p === 'PCS') {
+                    // PCS Balance = (What I Paid - My Share) + (What Processed Payments I Received ? No, wait)
+                    // If BSA pays me, my "Receivable" goes down.
+                    // My "Balance" is what *I* have a right to collect.
+                    // Initial Receivable = (PCS Paid - My Share).
+                    // Current Receivable = Initial Receivable - PaymentsReceived.
+
+                    const initialReceivable = pcsPaid - totalDebt;
+                    // Payments received from others
+                    const paymentsReceived = Object.keys(paymentsMade).reduce((sum, k) => k !== 'PCS' ? sum + paymentsMade[k] : sum, 0);
+
+                    partnerBalances[p] = initialReceivable - paymentsReceived;
+                } else {
+                    // Others: Balance = PaymentsMade - Debt
+                    // If debt is 1000, and I paid 0 -> Balance -1000.
+                    // If debt is 1000, and I paid 400 -> Balance -600.
+                    partnerBalances[p] = paymentsMade[p] - totalDebt;
+                }
+            });
+
+            return {
+                income, sharedExpense, sharedDeficit, baseSharePerPartner, individualExpense, pcsPaid, partnerBalances, paymentsMade
+            };
+        }
+
+        function calculatePartners(monthData, income, expense) {
+            const stats = calculateMonthStats(monthData);
+            const { sharedExpense, sharedDeficit, baseSharePerPartner, individualExpense, pcsPaid } = stats;
+
+            els.sharePerPartner.textContent = formatMoney(baseSharePerPartner);
+            els.partnersGrid.innerHTML = '';
+
+            // Update Note with Math
+            const noteContainer = document.querySelector('.partners-grid').nextElementSibling;
+            if (noteContainer) {
+                if (sharedDeficit > 0) {
+                    noteContainer.innerHTML = `
+                        <strong>Cálculo Transparente:</strong><br>
+                        Gastos Compartidos (-${formatMoney(sharedExpense)}) + Ingresos Utilizados (+${formatMoney(income)}) = <strong>Déficit de ${formatMoney(sharedDeficit)}</strong>.<br>
+                        Ese déficit se divide entre 4 = <strong>${formatMoney(baseSharePerPartner)} c/u</strong>.
+                        ${income > 0 ? `<br><span style="color:#0f766e; font-size:0.8rem;">* Los $${formatMoney(income)} de ingresos están pagando parte de la factura pendiente de Fusion Home.</span>` : ''}
+                    `;
+                } else {
+                    noteContainer.innerHTML = `<strong>Nota:</strong> Los ingresos superan a los gastos. No hay Cuota Base este mes.`;
+                }
+            }
+
+            // Liquidity Analysis (Keep existing logic)
+            // Pending Total was local variable in previous code, need to preserve it or recalculate?
+            // Re-calculating for simplicity as it was inline
+            const pendingTotal = monthData.filter(t => t.type === 'expense' && t.payer === 'pending').reduce((sum, t) => sum + t.amount, 0);
+            const liqDiv = document.getElementById('liquidityAnalysis');
+
+            if (pendingTotal > 0 && liqDiv) {
+                liqDiv.style.display = 'block';
+                const cashAvailable = income - pcsPaid;
+                const gap = cashAvailable - pendingTotal;
+
+                document.getElementById('liqIncome').textContent = formatMoney(income);
+                document.getElementById('liqPaid').textContent = '-' + formatMoney(pcsPaid);
+                document.getElementById('liqAvailable').textContent = formatMoney(cashAvailable);
+                document.getElementById('liqAvailable').style.color = cashAvailable >= 0 ? 'var(--success)' : 'var(--danger)';
+
+                document.getElementById('liqPending').textContent = formatMoney(pendingTotal);
+
+                const msgEl = document.getElementById('liqGapMessage');
+                if (gap >= 0) {
+                    msgEl.innerHTML = `✅ ¡Te alcanza! Tienes <strong>${formatMoney(cashAvailable)}</strong> disponibles y debes pagar <strong>${formatMoney(pendingTotal)}</strong>.<br>Te sobran ${formatMoney(gap)}.`;
+                    msgEl.style.color = 'var(--success)';
+                } else {
+                    msgEl.innerHTML = `⚠️ <strong>Faltan ${formatMoney(Math.abs(gap))}</strong> para poder pagar las facturas pendientes.<br>Necesitas que los socios te depositen parte de su deuda.`;
+                    msgEl.style.color = 'var(--danger)';
+                }
+            } else if (liqDiv) {
+                liqDiv.style.display = 'none';
+            }
+
+            PARTNERS.forEach(p => {
+                const isMe = p === 'PCS';
+                // Use the balance from stats
+                const balance = stats.partnerBalances[p];
+
+                const card = document.createElement('div');
+                card.className = `partner-card ${isMe ? 'is-me' : ''}`;
+
+                let statusHtml = '';
+                if (balance >= 0) {
+                    statusHtml = `<div class="partner-status ${isMe ? 'status-receive' : 'status-ok'}">${isMe ? 'Recibir' : 'Saldo'}: ${formatMoney(balance)}</div>`;
+                } else {
+                    statusHtml = `<div class="partner-status status-pay">Debes: ${formatMoney(Math.abs(balance))}</div>`;
+                }
+
+                const indExp = individualExpense[p] || 0;
+                const individualHtml = indExp > 0
+                    ? `<div class="partner-detail" style="color:var(--danger); font-weight:500;"><span>+ Cargo Individual</span><span>${formatMoney(indExp)}</span></div>`
+                    : '';
+
+                card.innerHTML = `
+                    <div class="partner-header">
+                        <span>${p} ${isMe ? '(Tú)' : ''}</span>
+                        <span style="font-size:0.8rem; opacity:0.6;">Socio</span>
+                    </div>
+                    <div class="partner-detail">
+                        <span>Cuota Base</span>
+                        <span>${formatMoney(baseSharePerPartner)}</span>
+                    </div>
+                    ${individualHtml}
+                    ${isMe && sharedDeficit > 0 ? `
+                    <div class="partner-detail">
+                        <span>Pagado Total</span>
+                        <span>${formatMoney(pcsPaid)}</span>
+                    </div>` : ''}
+                    ${statusHtml}
+                `;
+                els.partnersGrid.appendChild(card);
+            });
+        }
+
+        // --- Global Report Logic ---
+        function openGlobalReport() {
+            // Get all unique year-months
+            const periods = [...new Set(transactions.map(t => t.date.substring(0, 7)))].sort();
+
+            let totalBalances = { 'BSA': 0, 'OMCS': 0, 'MGV': 0, 'PCS': 0 };
+            let rowsHtml = '';
+
+            periods.forEach(ym => {
+                const [y, m] = ym.split('-');
+                const mData = transactions.filter(t => t.date.startsWith(ym));
+                const stats = calculateMonthStats(mData);
+
+                // Accumulate
+                Object.keys(totalBalances).forEach(p => {
+                    totalBalances[p] += stats.partnerBalances[p];
+                });
+
+                const mName = MonthNames[parseInt(m) - 1] + ' ' + y;
+
+                rowsHtml += `
+                    <tr>
+                        <td style="padding:0.8rem; font-weight:500;">${mName}</td>
+                        <td style="padding:0.8rem; color:${stats.partnerBalances['BSA'] >= 0 ? 'var(--text-main)' : 'var(--danger)'};">${formatMoney(stats.partnerBalances['BSA'])}</td>
+                        <td style="padding:0.8rem; color:${stats.partnerBalances['OMCS'] >= 0 ? 'var(--text-main)' : 'var(--danger)'};">${formatMoney(stats.partnerBalances['OMCS'])}</td>
+                        <td style="padding:0.8rem; color:${stats.partnerBalances['MGV'] >= 0 ? 'var(--text-main)' : 'var(--danger)'};">${formatMoney(stats.partnerBalances['MGV'])}</td>
+                        <td style="padding:0.8rem; font-weight:600; color:var(--primary);">${formatMoney(stats.partnerBalances['PCS'])}</td>
+                    </tr>
+                `;
+            });
+
+            // Render Modal
+            const accumulatedToReceive = totalBalances['PCS'];
+            const inRed = accumulatedToReceive < 0;
+
+            const modalBody = `
+                <div style="background:var(--bg-body); padding:1rem; border-radius:8px; margin-bottom:1.5rem;">
+                    <h3 style="color:var(--primary); margin-bottom:0.5rem; text-align:center;">Balance Total Acumulado</h3>
+                    <div style="text-align:center; font-size:2rem; font-weight:700; color:${inRed ? 'var(--danger)' : 'var(--success)'};">
+                        ${inRed ? 'DEBES' : 'TE DEBEN'}: ${formatMoney(Math.abs(accumulatedToReceive))}
+                    </div>
+                     <div style="text-align:center; font-size:0.9rem; color:var(--text-light);">
+                        ${inRed ? 'Tienes un déficit acumulado histórico.' : 'Esto es lo que te deben depositar en total los socios.'}
+                    </div>
+                </div>
+                
+                <h4 style="margin-bottom:1rem;">Detalle por Socio (Acumulado)</h4>
+                <div style="display:flex; gap:1rem; margin-bottom:2rem; justify-content:center;">
+                    ${['BSA', 'OMCS', 'MGV'].map(p => `
+                        <div style="background:white; padding:1rem; border:1px solid #ddd; border-radius:8px; text-align:center; flex:1;">
+                            <div style="font-size:0.8rem; font-weight:600; color:var(--text-light);">${p}</div>
+                            <div style="font-size:1.2rem; font-weight:700; color:${totalBalances[p] >= 0 ? 'var(--text-main)' : 'var(--danger)'};">
+                                ${formatMoney(totalBalances[p])}
+                            </div>
+                            <div style="font-size:0.75rem; color:${totalBalances[p] < 0 ? 'var(--danger)' : '#666'};">
+                                ${totalBalances[p] < 0 ? 'Debe' : 'A favor'}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <h4 style="margin-bottom:1rem;">Arrastre Mes con Mes</h4>
+                <div style="overflow-x:auto;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                        <thead style="background:#f1f5f9; text-align:left;">
+                            <tr>
+                                <th style="padding:0.8rem;">Mes</th>
+                                <th style="padding:0.8rem;">BSA</th>
+                                <th style="padding:0.8rem;">OMCS</th>
+                                <th style="padding:0.8rem;">MGV</th>
+                                <th style="padding:0.8rem;">PCS (Tú)</th>
+                            </tr>
+                        </thead>
+                        <tbody style="border-top:1px solid #ddd;">
+                            ${rowsHtml}
+                        </tbody>
+                        <tfoot style="background:#f0fdfa; font-weight:700; border-top:2px solid var(--primary);">
+                            <tr>
+                                <td style="padding:0.8rem;">TOTAL</td>
+                                <td style="padding:0.8rem; color:${totalBalances['BSA'] >= 0 ? 'black' : 'var(--danger)'}">${formatMoney(totalBalances['BSA'])}</td>
+                                <td style="padding:0.8rem; color:${totalBalances['OMCS'] >= 0 ? 'black' : 'var(--danger)'}">${formatMoney(totalBalances['OMCS'])}</td>
+                                <td style="padding:0.8rem; color:${totalBalances['MGV'] >= 0 ? 'black' : 'var(--danger)'}">${formatMoney(totalBalances['MGV'])}</td>
+                                <td style="padding:0.8rem; color:${totalBalances['PCS'] >= 0 ? 'black' : 'var(--danger)'}">${formatMoney(totalBalances['PCS'])}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            `;
+
+            document.getElementById('globalReportBody').innerHTML = modalBody;
+            document.getElementById('globalReportModal').classList.add('active');
+        }
+
+        function render() {
+            // Date Header
+            const mName = MonthNames[currentDate.getMonth()];
+            const fullDate = `${mName} ${currentDate.getFullYear()}`;
+            els.currentMonthDisplay.textContent = fullDate;
+            els.monthlyMovsTitle.textContent = `Movimientos del Mes (${mName})`;
+
+            const monthData = getMonthData();
+            monthData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = monthData.filter(t => t.description.toLowerCase().includes(search) || t.amount.toString().includes(search));
+
+            const income = monthData.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+            const expense = monthData.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+            const balance = income - expense;
+
+            els.totalIncome.textContent = formatMoney(income);
+            els.totalExpense.textContent = formatMoney(expense);
+            els.netBalance.textContent = formatMoney(balance);
+            els.netBalance.style.color = balance >= 0 ? 'var(--success)' : 'var(--danger)';
+
+            calculatePartners(monthData, income, expense);
+            renderTransactionsList(filtered);
+        }
+
+        function renderTransactionsList(list) {
+            els.transactionList.innerHTML = '';
+            if (list.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+            document.getElementById('emptyState').style.display = 'none';
+
+            list.forEach(t => {
+                const dateObj = new Date(t.date + 'T00:00:00');
+                const day = dateObj.getDate();
+                const monthShort = dateObj.toLocaleDateString('es-MX', { month: 'short' }).toUpperCase();
+
+                // Styles
+                let amountClass = 'amt-neg';
+                let typeSymbol = '-';
+                let tagColor = '#fee2e2'; // red
+                let tagText = '#991b1b';
+
+                if (t.type === 'income') {
+                    amountClass = 'amt-pos';
+                    typeSymbol = '+';
+                    tagColor = '#dcfce7'; // green
+                    tagText = '#166534';
+                } else if (t.type === 'payment') {
+                    amountClass = 'amt-pos';
+                    typeSymbol = '↙';
+                    tagColor = '#dbeafe'; // blue
+                    tagText = '#1e40af';
+                }
+
+                // Check if assigned specifically
+                const isAssigned = t.type === 'expense' && t.assignedTo && t.assignedTo !== 'all';
+                const assignedLabel = isAssigned ? `<span class="tag" style="background:#ccfbf1; color:#0f766e;">👤 ${t.assignedTo}</span>` : '';
+
+                // Check Payer Display
+                let payerDisplay = '';
+                if (t.type === 'expense') {
+                    if (t.payer === 'pending') {
+                        payerDisplay = '<span style="color:var(--warning); font-weight:600;">⏳ Pendiente de Pago</span>';
+                    } else if (t.payer) {
+                        payerDisplay = 'Pagado: ' + t.payer;
+                    }
+                } else if (t.type === 'payment') {
+                    payerDisplay = `<span style="font-weight:600; color:#1e40af;">Abono de ${t.payer}</span>`;
+                }
+
+                const div = document.createElement('div');
+                div.className = 'txn-item';
+                div.innerHTML = `
+                    <div class="txn-date">
+                        <span>${day}</span>
+                        <span style="font-size:0.7rem;">${monthShort}</span>
+                    </div>
+                    <div class="txn-details">
+                        <span class="txn-desc">${t.description}</span>
+                        <span class="txn-meta">
+                            <span class="tag" style="background:${tagColor}; color:${tagText}">${t.category}</span>
+                            ${assignedLabel}
+                            <span style="font-size:0.75rem; color:#999;">${payerDisplay}</span>
+                        </span>
+                    </div>
+                    <div class="txn-amount ${amountClass}" style="${t.type === 'payment' ? 'color:#2563eb' : ''}">
+                        ${typeSymbol} ${formatMoney(t.amount)}
+                    </div>
+                    <div class="txn-actions">
+                        ${t.type === 'expense' ? `<button class="btn-icon" onclick="togglePending('${t.id}')" title="${t.payer === 'pending' ? 'Marcar como Pagado (PCS)' : 'Marcar como Pendiente'}">⏳</button>` : ''}
+                        <button class="btn-icon" onclick="copyTransaction('${t.id}')" title="Copiar">📋</button>
+                        <button class="btn-icon" onclick="editTransaction('${t.id}')">✏️</button>
+                        <button class="btn-icon" onclick="deleteTransaction('${t.id}')" style="color:var(--danger)">🗑</button>
+                    </div>
+                `;
+                els.transactionList.appendChild(div);
+            });
+        }
+
+        // --- Consolidated Logic ---
+        function renderConsolidated() {
+            const yearDetails = els.consFilterYear.value;
+            const month = els.consFilterMonth.value;
+            const partner = els.consFilterPartner.value;
+            const type = els.consFilterType.value;
+
+            const filtered = transactions.filter(t => {
+                const d = new Date(t.date + 'T00:00:00');
+                if (yearDetails !== 'all' && d.getFullYear().toString() !== yearDetails) return false;
+                if (month !== 'all' && d.getMonth().toString() !== month) return false;
+
+                if (partner !== 'all') {
+                    const paidByHim = t.payer === partner;
+                    const assignedToHim = t.assignedTo === partner;
+
+                    if (t.type === 'expense') {
+                        if (!paidByHim && !assignedToHim) return false;
+                    } else if (t.type === 'payment') {
+                        if (!paidByHim) return false;
+                    } else {
+                        return false;
+                    }
+                }
+
+                if (type !== 'all' && t.type !== type) return false;
+                return true;
+            });
+
+            filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            els.consolidatedBody.innerHTML = '';
+            if (filtered.length === 0) {
+                els.consolidatedBody.innerHTML = '<tr><td colspan="5" style="padding:1rem; text-align:center; color:#999;">No hay resultados.</td></tr>';
+                return;
+            }
+
+            filtered.forEach(t => {
+                const tr = document.createElement('tr');
+                tr.style.borderBottom = '1px solid #f1f1f1';
+
+                const assignedText = (t.type === 'expense' && t.assignedTo && t.assignedTo !== 'all')
+                    ? `👤 <strong>${t.assignedTo}</strong>`
+                    : '🏠 Casa';
+
+                let payText = '';
+                if (t.type === 'payment') payText = `<span style="color:#1e40af">↙ Abono de ${t.payer}</span>`;
+
+                tr.innerHTML = `
+                    <td style="padding: 1rem;">${t.date}</td>
+                    <td style="padding: 1rem; font-weight:500;">
+                        ${t.description}
+                        ${payText ? '<br><span style="font-size:0.8rem">' + payText + '</span>' : ''}
+                    </td>
+                    <td style="padding: 1rem;"><span style="font-size:0.85rem; background:#f1f5f9; padding:2px 8px; border-radius:4px;">${t.category}</span></td>
+                    <td style="padding: 1rem;">${assignedText}</td>
+                    <td style="padding: 1rem; text-align: right; font-weight:600;" class="${t.type === 'income' ? 'amt-pos' : 'amt-neg'}">
+                        ${t.type === 'income' ? '+' : '-'} ${formatMoney(t.amount)}
+                    </td>
+                `;
+                els.consolidatedBody.appendChild(tr);
+            });
+        }
+
+        // --- Actions ---
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            render();
+        }
+
+        function updateFormType() {
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const assignGroup = document.getElementById('assignGroup');
+            const payerGroup = document.getElementById('payerGroup');
+            const categorySelect = document.getElementById('category').parentElement;
+
+            if (type === 'income') {
+                if (assignGroup) assignGroup.style.display = 'none';
+                if (payerGroup) payerGroup.style.display = 'none';
+                if (categorySelect) categorySelect.style.display = 'block';
+                document.getElementById('payerLabel').textContent = 'Pagado Por (Socio):';
+            } else if (type === 'payment') {
+                if (assignGroup) assignGroup.style.display = 'none';
+                if (payerGroup) payerGroup.style.display = 'block';
+                if (categorySelect) categorySelect.style.display = 'none';
+                document.getElementById('payerLabel').textContent = 'Socio que Abona:';
+            } else {
+                if (assignGroup) assignGroup.style.display = 'block';
+                if (payerGroup) payerGroup.style.display = 'block';
+                if (categorySelect) categorySelect.style.display = 'block';
+                document.getElementById('payerLabel').textContent = 'Pagado Por (Socio):';
+            }
+        }
+
+        function openModal(editId = null, copyFromId = null) {
+            document.querySelector('.modal-overlay').classList.add('active');
+
+            // Logic for Edit
+            if (editId) {
+                const t = transactions.find(tx => tx.id === editId);
+                document.getElementById('modalTitle').textContent = 'Editar Movimiento';
+                document.getElementById('editId').value = t.id;
+                document.getElementById('date').value = t.date;
+                document.getElementById('description').value = t.description;
+                document.getElementById('amount').value = t.amount;
+
+                const radio = document.querySelector(`input[name="type"][value="${t.type}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    updateFormType();
+                }
+                document.getElementById('category').value = t.category;
+                if (t.payer) els.payer.value = t.payer;
+                if (t.assignedTo) els.assignedTo.value = t.assignedTo;
+            }
+            // Logic for Copy
+            else if (copyFromId) {
+                const t = transactions.find(tx => tx.id === copyFromId);
+                document.getElementById('modalTitle').textContent = 'Nuevo (Copia)';
+                document.getElementById('editId').value = ''; // Empty ID to create new
+
+                // Pre-fill
+                document.getElementById('date').value = t.date;
+                document.getElementById('description').value = t.description;
+                document.getElementById('amount').value = t.amount;
+
+                const radio = document.querySelector(`input[name="type"][value="${t.type}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    updateFormType();
+                }
+                document.getElementById('category').value = t.category;
+                if (t.payer) els.payer.value = t.payer;
+                if (t.assignedTo) els.assignedTo.value = t.assignedTo;
+            }
+            // Logic for New
+            else {
+                document.getElementById('modalTitle').textContent = 'Nuevo Movimiento';
+                document.getElementById('editId').value = '';
+                els.form.reset();
+                document.getElementById('date').value = new Date().toISOString().split('T')[0];
+                document.querySelector('input[name="type"][value="expense"]').checked = true;
+                els.payer.value = 'PCS';
+                els.assignedTo.value = 'all';
+                updateFormType();
+            }
+        }
+
+        function closeModal() {
+            document.querySelector('.modal-overlay').classList.remove('active');
+        }
+
+        function handleOverlayClick(e) {
+            if (e.target.classList.contains('modal-overlay')) closeModal();
+        }
+
+        function editTransaction(id) {
+            openModal(id);
+            renderConsolidated();
+        }
+
+        function copyTransaction(id) {
+            openModal(null, id);
+        }
+
+        function togglePending(id) {
+            const idx = transactions.findIndex(t => t.id === id);
+            if (idx === -1) return;
+
+            const t = transactions[idx];
+            if (t.type !== 'expense') return; // Only expenses can be pending
+
+            if (t.payer === 'pending') {
+                // Toggle back to PCS (default)
+                t.payer = 'PCS';
+            } else {
+                // Set to Pending
+                t.payer = 'pending';
+            }
+            save();
+        }
+
+        function deleteTransaction(id) {
+            if (confirm('¿Eliminar este movimiento?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                save();
+            }
+        }
+
+        function handleTransactionSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const type = document.querySelector('input[name="type"]:checked').value;
+
+            let category = document.getElementById('category').value;
+            let payer = null;
+            let assignedTo = null;
+
+            if (type === 'expense') {
+                payer = document.getElementById('payer').value;
+                assignedTo = document.getElementById('assignedTo').value;
+            } else if (type === 'payment') {
+                category = 'PAGO DE DEUDA';
+                payer = document.getElementById('payer').value;
+                assignedTo = 'all';
+            } else if (type === 'income') {
+                // income
+            }
+
+            const newTxn = {
+                id: id || Date.now().toString(),
+                date: document.getElementById('date').value,
+                description: document.getElementById('description').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                category: category,
+                type: type,
+                payer: payer,
+                assignedTo: assignedTo,
+                addedByUser: true
+            };
+
+            if (id) {
+                const idx = transactions.findIndex(t => t.id === id);
+                transactions[idx] = newTxn;
+            } else {
+                transactions.push(newTxn);
+            }
+
+            save();
+            closeModal();
+            renderConsolidated();
+        }
+
+        function save() {
+            localStorage.setItem('casaToh_v2_transactions', JSON.stringify(transactions));
+            render();
+            renderConsolidated();
+        }
+
+        function exportData() {
+            const data = JSON.stringify(transactions);
+
+            // Try Async Clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(data).then(() => {
+                    alert("✅ ¡Datos copiados al Portapapeles!\n\nAhora ve al chat de la IA y pega el texto (Ctrl+V) para que pueda guardarlos en el archivo.");
+                }).catch(err => {
+                    // Fallback to Prompt
+                    prompt("⚠️ No pudimos copiar automático. Por favor, COPIA todo este texto manualmente (Ctrl+C):", data);
+                });
+            } else {
+                // Fallback
+                prompt("⚠️ Tu navegador no soporta copiado automático. Por favor, COPIA todo este texto manualmente (Ctrl+C):", data);
+            }
+        }
+
+        function renderTransactions() {
+            render();
+        }
+
+        // Init
+        init();
+
+    </script>
+</body>
+
+</html>
